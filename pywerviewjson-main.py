@@ -535,7 +535,12 @@ def main():
 
                 print(json.dumps(datas, indent=2))
             except Exception as e:
-                print(f"[!] JSON parse error: {e}")
+                print(f"[!] JSON parse error: {e} Printing output regularly.")
+                try:
+                    for x in results:
+                        print(x, '\n')
+                except TypeError:
+                    print(results)
 
         else:
             try:
