@@ -480,7 +480,7 @@ def main():
     invoke_eventhunter_parser.add_argument('--search-days', dest='search_days',
             type=int, default=3, help='Number of days back to search logs for (default: %(default)s)')
     invoke_eventhunter_parser.set_defaults(func=invoke_eventhunter)
-	
+    
     # Add --json to all subparsers (Future: Could be modified to only be added to those parsers that work)
     for subparser in subparsers.choices.values():
         subparser.add_argument('--json', action='store_true', help='Output results as JSON')
@@ -517,13 +517,18 @@ def main():
 
                 for x in results:
                     data = defaultdict(str)
+                    current_key = None
 
                     for line in str(x).splitlines():
-                        line = line.strip()
+                        line = line.rstrip()
+
                         match = re.match(r'^(\S+):\s+(.*)$', line)
                         if match:
                             key, value = match.groups()
+                            current_key = key
                             data[key] = value
+                        elif current_key:
+                            data[current_key] += ' ' + line.strip()
 
                     if data:
                         datas.append(dict(data))
@@ -531,6 +536,7 @@ def main():
                 print(json.dumps(datas, indent=2))
             except Exception as e:
                 print(f"[!] JSON parse error: {e}")
+
         else:
             try:
                 for x in results:

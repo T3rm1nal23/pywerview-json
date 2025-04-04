@@ -26,7 +26,8 @@ def restore_original():
         return
 
     shutil.copy2(BACKUP_FILE, TARGET_FILE)
-    print(f"Original file restored from '{BACKUP_FILE}' to '{TARGET_FILE}'.")
+    os.remove(BACKUP_FILE)
+    print(f"Original file restored from '{BACKUP_FILE}' to '{TARGET_FILE}'. Backup removed.")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
